@@ -1,5 +1,5 @@
 // 169. Majority Element
-class Solution {
+class MajorityElement {
     public int majorityElement(int[] nums) {
         int count = 0;
         int candidate = 0;
