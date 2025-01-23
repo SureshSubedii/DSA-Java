@@ -3,7 +3,7 @@ class BfsTraversal {
         TreeNode node;
         int level;
 
-      TreeNodeWithLevel(TreeNode node, int level) {
+        TreeNodeWithLevel(TreeNode node, int level) {
             this.node = node;
             this.level = level;
         }
@@ -12,85 +12,38 @@ class BfsTraversal {
     List<List<Integer>> result = new ArrayList<>();
 
     public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null) {
+            return result;
+        }
 
         Queue<TreeNodeWithLevel> queue = new LinkedList<>();
-        if (root == null)
-            return result;
-
-        result.add(new ArrayList<>() {
-            {
-                add(root.val);
-            }
-        });
+        result.add(new ArrayList<>(List.of(root.val))); 
         queue.add(new TreeNodeWithLevel(root, 0));
+
         while (!queue.isEmpty()) {
             TreeNodeWithLevel currentTree = queue.poll();
-            TreeNode treeNode = currentTree.node;
-            if (treeNode == null)
-                continue;
+            TreeNode node = currentTree.node;
             int currentLevel = currentTree.level + 1;
 
-            if (treeNode.left != null && treeNode.right != null) {
+            if (node.left != null) {
                 if (currentLevel < result.size()) {
-                    result.get(currentLevel).add(treeNode.left.val);
-                    result.get(currentLevel).add(treeNode.right.val);
-
+                    result.get(currentLevel).add(node.left.val);
                 } else {
-                    result.add(new ArrayList<>() {
-                        {
-                            add(treeNode.left.val);
-                            add(treeNode.right.val);
-                        }
-                    });
+                    result.add(new ArrayList<>(List.of(node.left.val)));
                 }
-                queue.add(new TreeNodeWithLevel(treeNode.left, currentLevel));
-                queue.add(new TreeNodeWithLevel(treeNode.right, currentLevel));
-            } else if (treeNode.left == null && treeNode.right == null)
-                continue;
+                queue.add(new TreeNodeWithLevel(node.left, currentLevel));
+            }
 
-            else {
-                addNode(treeNode.left, treeNode.right, queue, currentLevel);
-
+            if (node.right != null) {
+                if (currentLevel < result.size()) {
+                    result.get(currentLevel).add(node.right.val);
+                } else {
+                    result.add(new ArrayList<>(List.of(node.right.val)));
+                }
+                queue.add(new TreeNodeWithLevel(node.right, currentLevel));
             }
         }
+
         return result;
-
-    }
-
-    public void addNode(TreeNode left, TreeNode right, Queue<TreeNodeWithLevel> queue, int currentLevel) {
-
-        if (currentLevel < result.size()) {
-
-            if (left == null) {
-                result.get(currentLevel).add(right.val);
-                queue.add(new TreeNodeWithLevel(right, currentLevel));
-            }
-
-            else {
-                result.get(currentLevel).add(left.val);
-                queue.add(new TreeNodeWithLevel(left, currentLevel));
-            }
-
-        } else {
-            if (left == null) {
-                result.add(new ArrayList<>() {
-                    {
-                        add(right.val);
-                    }
-                });
-                queue.add(new TreeNodeWithLevel(right, currentLevel));
-
-            } else {
-                result.add(new ArrayList<>() {
-                    {
-                        add(left.val);
-                    }
-                });
-                queue.add(new TreeNodeWithLevel(left, currentLevel));
-
-            }
-
-        }
-
     }
 }
